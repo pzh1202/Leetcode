@@ -5,7 +5,7 @@ This repository inspired me to develop a good habit of writing questions
 # 剑指 offer 记录
 
 ## 剑指offer 09
-## 232. 用栈实现队列
+## 用栈实现队列
 用两个栈实现一个队列。队列的声明如下，请实现它的两个函数 appendTail 和 deleteHead, 分别完成在队列尾部插入整数和在队列头部删除整数的功能。(若队列中没有元素，deleteHead 操作返回 -1 )<br>
 输入输出实例：
 ```
@@ -37,9 +37,10 @@ public:
                 s2.push(s1.top());
                 s1.pop();   
             }
+            //栈底弹出
             head = s2.top();
             s2.pop();
-<!--        //将栈进行还原
+            //将栈进行还原
             while(!s2.empty()){
                 s1.push(s2.top());
                 s2.pop();
@@ -62,4 +63,29 @@ private:
  */
 ```
 
-#
+## 剑指offer 30
+## 包含min函数的栈
+定义栈的数据结构，请在该类型中实现一个能够得到栈的最小元素的 min 函数在该栈中，调用 min、push 及 pop 的时间复杂度都是 O(1)。
+输入输出实例：
+```
+MinStack minStack = new MinStack();
+minStack.push(-2);
+minStack.push(0);
+minStack.push(-3);
+minStack.min();   --> 返回 -3.
+minStack.pop();
+minStack.top();      --> 返回 0.
+minStack.min();   --> 返回 -2.
+```
+本题目的重点是如何实现对于栈找最小元素的复杂度O(0)的实现。
+解题思路：
+push(x) 函数： 重点为保持栈 BB 的元素是 非严格降序 的。
+
+将 xx 压入栈 AA （即 A.add(x) ）；
+若 ① 栈 BB 为空 或 ② xx 小于等于 栈 BB 的栈顶元素，则将 xx 压入栈 BB （即 B.add(x) ）。
+pop() 函数： 重点为保持栈 A, BA,B 的 元素一致性 。
+
+执行栈 AA 出栈（即 A.pop() ），将出栈元素记为 yy ；
+若 yy 等于栈 BB 的栈顶元素，则执行栈 B 出栈（即 B.pop() ）。
+
+

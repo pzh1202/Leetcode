@@ -79,13 +79,52 @@ minStack.min();   --> 返回 -2.
 ```
 本题目的重点是如何实现对于栈找最小元素的复杂度O(0)的实现。
 解题思路：
-push(x) 函数： 重点为保持栈 BB 的元素是 非严格降序 的。
+![solve_way](https://github.com/SEU-PZH/Leetcode/blob/main/img/day1.png)
+```
+class MinStack {
+public:
+    /** initialize your data structure here. */
+    stack<int> s1;
+    stack<int> s2;
+    MinStack() {
+    }
+    
+    void push(int x) {
+        if(s1.empty()){
+            s2.push(x);
+        }
+        else if(s2.top() >= x){
+            //辅助栈的建立，不需严格递增
+            s2.push(x);
+        }
+        s1.push(x);
+    }
+    
+    void pop() {
+        int head;
+        head = s1.top();
+        //保持元素一致性
+        if(head == s2.top()){
+            s2.pop();
+        }
+        s1.pop();
+    }
+    
+    int top() {
+        return s1.top();
+    }
+    
+    int min() {
+        return s2.top();
+    }
+};
 
-将 xx 压入栈 AA （即 A.add(x) ）；
-若 ① 栈 BB 为空 或 ② xx 小于等于 栈 BB 的栈顶元素，则将 xx 压入栈 BB （即 B.add(x) ）。
-pop() 函数： 重点为保持栈 A, BA,B 的 元素一致性 。
-
-执行栈 AA 出栈（即 A.pop() ），将出栈元素记为 yy ；
-若 yy 等于栈 BB 的栈顶元素，则执行栈 B 出栈（即 B.pop() ）。
-
-
+/**
+ * Your MinStack object will be instantiated and called as such:
+ * MinStack* obj = new MinStack();
+ * obj->push(x);
+ * obj->pop();
+ * int param_3 = obj->top();
+ * int param_4 = obj->min();
+ */
+```

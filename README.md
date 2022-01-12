@@ -237,7 +237,7 @@ public:
     }
 };
 ```
-方法二：递归
+方法二：递归<br>
 ![solve_way](https://github.com/SEU-PZH/Leetcode/blob/main/img/day2.png)
 ```c++
 //newHead指向的永远是反转后的头节点，而head可以看成是针对于每次递归过程中，归的过程中对于链表进行反转过程。

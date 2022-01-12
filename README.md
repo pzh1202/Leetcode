@@ -255,6 +255,87 @@ public:
 };
 ```
 
+## 剑指 Offer 35
+## 复杂链表的复制
+请实现 copyRandomList 函数，复制一个复杂链表。在复杂链表中，每个节点除了有一个 next 指针指向下一个节点，还有一个 random 指针指向链表中的任意节点或者 null。
+
+![day2_2](https://user-images.githubusercontent.com/97490701/149089353-238efac1-cc26-41bc-90b3-a8b7deec3c33.png)
+### 方法一：回溯 + 哈希表
+这道题的难点，是建立一种你深拷贝的方式，对于每一个新的指向节点，都要对于其建立新的空间，方法一的方式是对于原本的节点使用MAP对应节点和新开辟节点之间的对应关系，最后进行相互指针的指引。
+```c++
+/*
+// Definition for a Node.
+class Node {
+public:
+    int val;
+    Node* next;
+    Node* random;
+    
+    Node(int _val) {
+        val = _val;
+        next = NULL;
+        random = NULL;
+    }
+};
+*/
+//#include <iostream>
+//using namespace std;
+class Solution {
+public:
+    Node* copyRandomList(Node* head) {
+        map<Node*, Node*> m1;
+        Node* temp = head;
+        while(head!=NULL){
+            if(m1[head] == NULL){
+                Node* copyhead = new Node(head->val);
+                m1[head] = copyhead;
+                head = head->next;
+                //copyhead = copyhead->next;
+            }
+            
+        }
+        head = temp;
+        Node* res = m1[head];
+        while(head!=NULL){
+            m1[head]->random = m1[head->random];
+            m1[head]->next = m1[head->next];
+            head = head->next;
+        }
+        return res;
+    }
+};
+```
+### 方法二：迭代 + 节点拆分
+注意到方法一需要使用哈希表记录每一个节点对应新节点的创建情况，而我们可以使用一个小技巧来省去哈希表的空间。我们首先将该链表中每一个节点拆分为两个相连的节点，例如对于链表 A→B→C，我们可以将其拆分为A→A→B→B→C→C。对于任意一个原节点 SS，其拷贝节点 S'S′  即为其后继节点。这样，我们可以直接找到每一个拷贝节点 S'S 的随机指针应当指向的节点，即为其原节点 SS 的随机指针指向的节点 TT 的后继节点 T'T。需要注意原节点的随机指针可能为空，我们需要特别判断这种情况。
+
+当我们完成了拷贝节点的随机指针的赋值，我们只需要将这个链表按照原节点与拷贝节点的种类进行拆分即可，只需要遍历一次。同样需要注意最后一个拷贝节点的后继节点为空，我们需要特别判断这种情况
+
+![day2_3](https://user-images.githubusercontent.com/97490701/149090529-717ac349-f040-4d4c-9b70-c9ef3a3b9e4a.png)
 
 
-
+```c++
+class Solution {
+public:
+    Node* copyRandomList(Node* head) {
+        if (head == nullptr) {
+            return nullptr;
+        }
+        for (Node* node = head; node != nullptr; node = node->next->next) {
+            Node* nodeNew = new Node(node->val);
+            nodeNew->next = node->next;
+            node->next = nodeNew;
+        }
+        for (Node* node = head; node != nullptr; node = node->next->next) {
+            Node* nodeNew = node->next;
+            nodeNew->random = (node->random != nullptr) ? node->random->next : nullptr;
+        }
+        Node* headNew = head->next;
+        for (Node* node = head; node != nullptr; node = node->next) {
+            Node* nodeNew = node->next;
+            node->next = node->next->next;
+            nodeNew->next = (nodeNew->next != nullptr) ? nodeNew->next->next : nullptr;
+        }
+        return headNew;
+    }
+};
+```

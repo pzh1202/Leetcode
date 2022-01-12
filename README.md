@@ -128,3 +128,133 @@ public:
  * int param_4 = obj->min();
  */
 ```
+
+
+## 剑指 Offer 06
+## 从尾到头打印链表
+输入一个链表的头节点，从尾到头反过来返回每个节点的值（用数组返回）。
+```
+输入：head = [1,3,2]
+输出：[2,3,1]
+```
+方法一：栈，通过栈的的方式，每次弹出栈中的顶层元素，实现反转。
+```c++
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+ #include <iostream>
+ using namespace std;
+class Solution {
+public:
+    vector<int> reversePrint(ListNode* head) {
+        stack<int> s1;
+        while(head != NULL){
+            s1.push(head->val);
+            head = head->next;
+        }
+        vector<int> v1;
+        while(!s1.empty()){
+            v1.push_back(s1.top());
+            s1.pop();
+        }
+        return v1;
+        
+    }
+};
+```
+方法二，递归方式，对于每次递归，在归的过程之对于最后的元素放入数组中。
+```c++
+class Solution {
+public:
+    vector<int> reversePrint(ListNode* head) {
+        if(!head)
+            return {};
+        vector<int> a=reversePrint(head->next);
+        a.push_back(head->val);
+        return a;
+    }
+};
+```
+
+## 剑指 Offer 24
+## 反转链表 
+定义一个函数，输入一个链表的头节点，反转该链表并输出反转后链表的头节点。
+```
+输入: 1->2->3->4->5->NULL
+输出: 5->4->3->2->1->NULL
+```
+```c++
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+        stack<int> s1;
+        ListNode* node = head;
+        while(node!=NULL){
+            s1.push(node->val);
+            node = node->next;
+        }
+        ListNode* temp = head;
+        while(temp!=NULL){
+            temp->val = s1.top();
+            s1.pop();
+            temp = temp->next;
+        }
+        return head;
+        
+    }
+};
+```
+方法一：迭代
+假设链表为1→2→3→∅，我们想要把它改成 3∅←1←2←3。
+
+在遍历链表时，将当前节点的指针改为指向前一个节点。由于节点没有引用其前一个节点，因此必须事先存储其前一个节点。在更改引用之前，还需要存储后一个节点。最后返回新的头引用
+```c++
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+        ListNode* prev = nullptr;
+        ListNode* curr = head;
+        while (curr) {
+            ListNode* next = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = next;
+        }
+        return prev;
+    }
+};
+```
+方法二：递归
+![solve_way](https://github.com/SEU-PZH/Leetcode/blob/main/img/day2.png)
+```c++
+//newHead指向的永远是反转后的头节点，而head可以看成是针对于每次递归过程中，归的过程中对于链表进行反转过程。
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+        if (!head || !head->next) {
+            return head;
+        }
+        ListNode* newHead = reverseList(head->next);
+        head->next->next = head;
+        head->next = nullptr;
+        return newHead;
+    }
+};
+```
+
+
+
+

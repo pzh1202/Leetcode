@@ -339,3 +339,28 @@ public:
     }
 };
 ```
+
+
+## 剑指 offer 05
+## 替换空格
+请实现一个函数，把字符串 s 中的每个空格替换成"%20"。
+```
+输入：s = "We are happy."
+输出："We%20are%20happy."
+```
+```c++
+class Solution {
+public:
+    string replaceSpace(string s) {
+        for(int i=0;i<s.length();i++){
+            if(s[i]==' '){
+                s.erase(i,1);
+                s.insert(i,"%20");
+            } 
+        }
+        return s;
+    }
+};
+```
+
+ 

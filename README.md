@@ -390,3 +390,82 @@ public:
 };
 ```
 
+## 剑指 Offer 03
+## 数组中重复的数字
+找出数组中重复的数字。
+
+
+在一个长度为 n 的数组 nums 里的所有数字都在 0～n-1 的范围内。数组中某些数字是重复的，但不知道有几个数字重复了，也不知道每个数字重复了几次。请找出数组中任意一个重复的数字。
+
+```
+输入：
+[2, 3, 1, 0, 2, 5, 3]
+输出：2 或 3 
+```
+```c++
+class Solution {
+public:
+    int findRepeatNumber(vector<int>& nums) {
+        map<int, int> m1;
+        for(int i=0; i<nums.size(); i++){
+            m1[nums[i]]++;
+            if(m1[nums[i]]>1){
+                return nums[i];
+            }
+        }
+        return 0;
+    }
+};
+```
+
+## 剑指 Offer 53  
+## I. 在排序数组中查找数字 I
+统计一个数字在排序数组中出现的次数。
+```
+输入: nums = [5,7,7,8,8,10], target = 8
+输出: 2
+```
+```c++
+class Solution {
+public:
+    int search(vector<int>& nums, int target) {
+        int a = 0;
+        for(int i=0;i<nums.size();i++){
+            if(nums[i] == target){
+                a++;
+            }
+        }
+        return a;
+    }
+};
+```
+二分查找
+![day3](https://user-images.githubusercontent.com/97490701/149472948-eb27b74f-14bb-43e0-9c07-9c0b97470e2d.png)
+
+```c++
+class Solution {
+public:
+    int binarySearch(vector<int>& nums, int target, bool lower) {
+        int left = 0, right = (int)nums.size() - 1, ans = (int)nums.size();
+        while (left <= right) {
+            int mid = (left + right) / 2;
+            if (nums[mid] > target || (lower && nums[mid] >= target)) {
+                right = mid - 1;
+                ans = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return ans;
+    }
+
+    int search(vector<int>& nums, int target) {
+        int leftIdx = binarySearch(nums, target, true);
+        int rightIdx = binarySearch(nums, target, false) - 1;
+        if (leftIdx <= rightIdx && rightIdx < nums.size() && nums[leftIdx] == target && nums[rightIdx] == target) {
+            return rightIdx - leftIdx + 1;
+        }
+        return 0;
+    }
+};
+```

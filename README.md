@@ -80,7 +80,7 @@ minStack.min();   --> 返回 -2.
 本题目的重点是如何实现对于栈找最小元素的复杂度O(0)的实现。
 解题思路：
 ![solve_way](https://github.com/SEU-PZH/Leetcode/blob/main/img/day1.png)
-```
+```c++
 class MinStack {
 public:
     /** initialize your data structure here. */

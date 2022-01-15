@@ -504,3 +504,133 @@ public:
     }
 };
 ```
+
+
+## 剑指 Offer 04
+## 二维数组中的查找
+在一个 n * m 的二维数组中，每一行都按照从左到右递增的顺序排序，每一列都按照从上到下递增的顺序排序。请完成一个高效的函数，输入这样的一个二维数组和一个整数，判断数组中是否含有该整数。
+```
+示例:
+
+现有矩阵 matrix 如下：
+
+[
+  [1,   4,  7, 11, 15],
+  [2,   5,  8, 12, 19],
+  [3,   6,  9, 16, 22],
+  [10, 13, 14, 17, 24],
+  [18, 21, 23, 26, 30]
+]
+给定 target = 5，返回 true。
+
+给定 target = 20，返回 false。
+```
+本来想得是通过两个二分查找，相夹找到范围，后来发现后几个实例过不去，发现对于二分查找找上下界，只能够用来确定他的上界，无法确定下界。
+```c++
+//#include <iostream>
+//using namespace std;
+class Solution {
+public:
+    int findcol(vector<vector<int>>& matrix, int target, bool flag) {
+            int down, up=0;
+            down = matrix.size()-1;//5
+            //cout<<up;
+            int mid_row;
+            while((down-up)>1){
+                mid_row = (down+up)/2;
+                if(matrix[mid_row][0]>target || (flag == true && matrix[mid_row][0] == target)){
+                    down = mid_row;
+                }
+                else{
+                    up = mid_row;
+                }
+                if(abs(matrix[mid_row][0]-target)<=(matrix[0].size()-1))
+                    break;
+            }
+            if(flag)
+                return up;
+            else
+                return down;
+    }
+
+    int findrow(vector<vector<int>>& matrix, int target, bool flag) {
+            int down, up=0;
+            down = matrix[0].size()-1;
+            int mid_row;
+            while((down-up)>1){
+                mid_row = (down+up)/2;
+                if(matrix[0][mid_row]>target || (flag == true && matrix[0][mid_row] == target)){
+                    down = mid_row;
+                }
+                else{
+                    up = mid_row;
+                }
+                if((matrix[0][mid_row]-target)<=(matrix[0].size()-1))
+                    break;
+            }
+            if(flag)
+                return down;
+            else
+                return up;
+    }
+
+    bool findNumberIn2DArray(vector<vector<int>>& matrix, int target) {
+
+        int down_fin,up_fin;
+        int left_fin,right_fin;
+        if(matrix.size()==0){
+            return false;
+        }
+        up_fin = findcol(matrix, target, true);
+        down_fin = findcol(matrix, target, false);
+        left_fin = findrow(matrix, target, false);
+        right_fin = findrow(matrix, target, true);
+
+        //cout<<down_fin<<up_fin<<left_fin<<right_fin;
+        
+        //if(matrix[][])
+
+        for(int i=0;i<=down_fin;i++){
+            for(int j = 0;j<matrix[0].size(); j++){
+                if(matrix[i][j] == target){
+                    return true;
+                }
+            }
+        }
+        for(int i=0;i<matrix.size();i++){
+            for(int j = 0;j<=right_fin; j++){
+                if(matrix[i][j] == target){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+};
+```
+
+方法一：暴力
+```c++
+
+```
+方法二：
+先找行，再找列。<br>
+若 flag > target ，则 target 一定在 flag 所在 行的上方 ，即 flag 所在行可被消去。<br>
+若 flag < target ，则 target 一定在 flag 所在 列的右方 ，即 flag 所在列可被消去。<br>
+![day4](https://user-images.githubusercontent.com/97490701/149607792-399dcbaa-aaed-4e6d-8b27-76b8af237522.png)
+
+```c++
+class Solution {
+public:
+    bool findNumberIn2DArray(vector<vector<int>>& matrix, int target) {
+        int i = matrix.size() - 1, j = 0;
+        while(i >= 0 && j < matrix[0].size())
+        {
+            if(matrix[i][j] > target) i--;
+            else if(matrix[i][j] < target) j++;
+            else return true;
+        }
+        return false;
+    }
+};
+```

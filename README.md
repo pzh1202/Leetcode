@@ -609,11 +609,27 @@ public:
 };
 ```
 
-方法一：暴力
-```c++
+### 方法一：暴力
+```java
+class Solution {
+    public boolean findNumberIn2DArray(int[][] matrix, int target) {
+        if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
+            return false;
+        }
+        int rows = matrix.length, columns = matrix[0].length;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                if (matrix[i][j] == target) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+}
 
 ```
-方法二：
+### 方法二：
 先找行，再找列。<br>
 若 flag > target ，则 target 一定在 flag 所在 行的上方 ，即 flag 所在行可被消去。<br>
 若 flag < target ，则 target 一定在 flag 所在 列的右方 ，即 flag 所在列可被消去。<br>

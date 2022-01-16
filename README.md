@@ -807,14 +807,14 @@ public:
 
 [3,9,20,15,7]
 ```
-算法流程：
-特例处理： 当树的根节点为空，则直接返回空列表 [] ；
-初始化： 打印结果列表 res = [] ，包含根节点的队列 queue = [root] ；
-BFS 循环： 当队列 queue 为空时跳出；
-出队： 队首元素出队，记为 node；
-打印： 将 node.val 添加至列表 tmp 尾部；
-添加子节点： 若 node 的左（右）子节点不为空，则将左（右）子节点加入队列 queue ；
-返回值： 返回打印结果列表 res 即可。
+算法流程：<br>
+特例处理： 当树的根节点为空，则直接返回空列表 [] ；<br>
+初始化： 打印结果列表 res = [] ，包含根节点的队列 queue = [root] ；<br>
+BFS 循环： 当队列 queue 为空时跳出；<br>
+出队： 队首元素出队，记为 node；<br>
+打印： 将 node.val 添加至列表 tmp 尾部；<br>
+添加子节点： 若 node 的左（右）子节点不为空，则将左（右）子节点加入队列 queue ；<br>
+返回值： 返回打印结果列表 res 即可。<br>
 
 ```c++
 class Solution {
@@ -836,6 +836,114 @@ public:
         }
         return res;
 
+    }
+};
+```
+
+
+## 剑指 Offer 32
+## II. 从上到下打印二叉树 II
+从上到下按层打印二叉树，同一层的节点按从左到右的顺序打印，每一层打印到一行。
+```
+例如:
+给定二叉树: [3,9,20,null,null,15,7],
+
+    3
+   / \
+  9  20
+    /  \
+   15   7
+返回其层次遍历结果：
+
+[
+  [3],
+  [9,20],
+  [15,7]
+]
+```
+
+```c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+
+ //#include <iostream>
+ //using namespace std;
+class Solution {
+public:
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        vector<vector<int>> res;
+        queue<TreeNode*> q;
+        queue<int> q2;
+        vector<int> temp;
+        int height = 0;
+        int num = 0;
+        int flag;
+        if(root==NULL){
+            return res;
+        }
+        q.push(root);
+        q2.push(height);
+        while(!q.empty()){
+            TreeNode* node = q.front();
+            //cout<<q2.front();
+            if(height != q2.front()){
+                res.push_back(temp);    //判断当前节点与上一记录节点是否在同一层
+                temp.clear();
+            }
+            num = q2.front();
+            height = num;
+            temp.push_back(node->val);
+            q.pop();
+            q2.pop();//每次我们都存储节点和节点的深度，因为是队列的形式，对于节点的存储也是同层的。
+            flag = 1;
+            if(node->left){
+                q.push(node->left);
+                q2.push(++num);
+                flag = 0;
+            }
+            if(node->right){
+                q.push(node->right);
+                num = num + flag;//避免空节点造成的层数差异。
+                q2.push(num);
+            }
+            flag = 1;
+        }
+        res.push_back(temp);//最后需要进行一次额外的存储过程。
+        return res;
+    }
+};
+```
+大神的写法：
+```c++
+class Solution {
+public:
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        queue<TreeNode*> q;
+        vector<vector<int> > ans;
+        if(root==NULL){
+            return ans;
+        }
+        q.push(root);
+        while(!q.empty()){
+            vector<int> temp;
+            for(int i=q.size();i>0;i--){//因为我每次会存储最多两次，而存储的次数都是在同一层的内容，每次将节点读出又会将下次层的节点分多次放入进去，便于下次循环存储。
+                TreeNode* node = q.front();
+                q.pop();
+                temp.push_back(node->val);
+                if(node->left!=NULL) q.push(node->left);
+                if(node->right!=NULL) q.push(node->right);
+            }
+            ans.push_back(temp);
+        }
+
+        return ans;
     }
 };
 ```

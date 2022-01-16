@@ -933,7 +933,7 @@ public:
         q.push(root);
         while(!q.empty()){
             vector<int> temp;
-            for(int i=q.size();i>0;i--){//因为我每次会存储最多两次，而存储的次数都是在同一层的内容，每次将节点读出又会将下次层的节点分多次放入进去，便于下次循环存储。
+            for(int i=q.size();i>0;i--){//因为每次存储的次数都是在同一层的内容，每次将节点读出又会将下次层的节点分多次放入进去，便于下次循环存储，队列长度和每层节点数（lens）是对应的
                 TreeNode* node = q.front();
                 q.pop();
                 temp.push_back(node->val);
